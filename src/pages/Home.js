@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import Button from '@mui/material/Button';
+import Button, { buttonClasses } from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -10,8 +10,9 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useSelector, useDispatch } from "react-redux";
-import { loadUsers } from "../redux/actions";
+import { deleteUser, loadUsers } from "../redux/actions";
 import { blue, yellow, red } from '@mui/material/colors';
+import { useNavigate } from "react-router-dom";
 
 /* COLOR */
 
@@ -64,6 +65,7 @@ const theme = createTheme({
 
 
 const Home = () => {
+  const navigate=useNavigate()
   let dispatch = useDispatch()
   const { users } = useSelector(state => state.data)
 
@@ -72,10 +74,22 @@ const Home = () => {
     dispatch(loadUsers())
   }, [])
 
+  const handleDelete = (id) => {
+      if(window.confirm("Are you sure that you want to delete the user?")){
+        dispatch(deleteUser(id))
+      }
+  }
   
+function handleClick(){
+  navigate("/addUser")
+}
+
   return (
     <ThemeProvider theme={theme}>
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: 100 }}>
+      <div style={{marginTop: "50px"}}>
+        <Button onClick={handleClick} variant="contained">Add Contact</Button>
+      </div>
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: 50 }}>
       <TableContainer sx={{ maxWidth: 1400 }} component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
@@ -99,7 +113,7 @@ const Home = () => {
                 <StyledTableCell align="center">{user.address}</StyledTableCell>
                 <StyledTableCell align="center">{user.email}</StyledTableCell>
                 <StyledTableCell align="center"><ButtonGroup variant="contained" aria-label="outlined primary button group">
-                  <Button color="secondary">Delete</Button>
+                  <Button onClick={()=>handleDelete(user.id)} style={{marginRight: "3px"}} color="secondary">Delete</Button>
                   <Button color="primary">Edit</Button>
                 </ButtonGroup></StyledTableCell>
               </StyledTableRow>
