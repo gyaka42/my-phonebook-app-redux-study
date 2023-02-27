@@ -80,7 +80,7 @@ const EditUser = () => {
                         width: "100vh",
                         marginLeft: "auto",
                         marginRight: "auto",
-                        marginTop: "100px",
+                        marginTop: "10px",
                     }}
                 >
                     <h2>Edit User</h2>

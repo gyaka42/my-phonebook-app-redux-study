@@ -10,6 +10,8 @@ import { useDispatch } from "react-redux";
 import { addUser } from "../redux/actions";
 import { MuiTelInput } from 'mui-tel-input';
 
+import "../styles/add-user.css"
+
 
 const theme = createTheme({
     palette: {
@@ -69,7 +71,7 @@ const AddUser = () => {
                         width: "100vh",
                         marginLeft: "auto",
                         marginRight: "auto",
-                        marginTop: "100px",
+                        marginTop: "10px",
                     }}
                 >
                     <h2>Add User</h2>
