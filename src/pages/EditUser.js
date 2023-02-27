@@ -1,15 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button, { buttonClasses } from "@mui/material/Button";
 import { blue, yellow, red } from "@mui/material/colors";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { addUser } from "../redux/actions";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getSingleUser, updateUser } from "../redux/actions";
 import { MuiTelInput } from 'mui-tel-input';
-
 
 const theme = createTheme({
     palette: {
@@ -18,7 +17,9 @@ const theme = createTheme({
     },
 });
 
-const AddUser = () => {
+const EditUser = () => {
+    const { user } = useSelector(state => state.data)
+    let { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [error, setError] = useState("");
@@ -32,16 +33,27 @@ const AddUser = () => {
 
     const { firstName, lastName, phonenumber, address, email } = state;
 
+    useEffect(() => {
+        dispatch(getSingleUser(id))
+    }, [])
+
+
+    useEffect(()=>{
+        if(user) {
+            setState({...user})
+        }
+    }, [user])
+
+
     function cancelClick() {
         navigate("/");
     }
 
     const handleInputChange = (event) => {
-        if (event && event.target) {
-            const { name, value } = event.target;
-            setState({ ...state, [name]: value });
-        }
+        let { name, value } = event.target;
+        setState({ ...state, [name]: value });
     };
+
 
     const handlePhoneChange = (value) => {
         setState({ ...state, phonenumber: value });
@@ -53,12 +65,11 @@ const AddUser = () => {
         if (!firstName || !lastName || !phonenumber || !address || !email) {
             setError("Input fields cannot be empty !");
         } else {
-            dispatch(addUser(state));
+            dispatch(updateUser(state, id));
             navigate("/");
             setError("");
         }
     };
-    
 
     return (
         <ThemeProvider theme={theme}>
@@ -72,7 +83,7 @@ const AddUser = () => {
                         marginTop: "100px",
                     }}
                 >
-                    <h2>Add User</h2>
+                    <h2>Edit User</h2>
                     {error && <h3 style={{ color: "red" }}>{error}</h3>}
                     <Box
                         sx={{
@@ -82,22 +93,20 @@ const AddUser = () => {
                         autoComplete="off"
                     >
                         <TextField
-                        variant="outlined"
                             id="outlined-basic"
                             label="First Name"
                             placeholder="Enter your name"
-                            value={firstName}
+                            value={firstName || ""}
                             name="firstName"
                             type="text"
                             onChange={handleInputChange}
                         />
                         <br />
                         <TextField
-                        variant="outlined"
                             id="outlined-basic"
                             label="Last Name"
                             placeholder="Enter your last name"
-                            value={lastName}
+                            value={lastName || ""}
                             name="lastName"
                             type="text"
                             onChange={handleInputChange}
@@ -113,24 +122,31 @@ const AddUser = () => {
                             label="Phone Number"
                             placeholder="Enter your phone number"
                          />
+                        {/* <TextField
+                            id="outlined-basic"
+                            label="Phone Number"
+                            placeholder="Enter your phone number"
+                            value={phonenumber || ""}
+                            name="phonenumber"
+                            type="text"
+                            onChange={handleInputChange}
+                        /> */}
                         <br />
                         <TextField
-                        variant="outlined"
                             id="outlined-basic"
                             label="Address"
                             placeholder="Enter your address"
-                            value={address}
+                            value={address || ""}
                             name="address"
                             type="text"
                             onChange={handleInputChange}
                         />
                         <br />
                         <TextField
-                        variant="outlined"
                             id="outlined-basic"
                             label="Email"
                             placeholder="Enter your email"
-                            value={email}
+                            value={email || ""}
                             name="email"
                             type="email"
                             onChange={handleInputChange}
@@ -143,7 +159,7 @@ const AddUser = () => {
                             type="submit"
                             variant="contained"
                         >
-                            Submit
+                            Update
                         </Button>
                         <Button onClick={cancelClick} color="secondary" variant="contained">
                             Cancel
@@ -155,4 +171,4 @@ const AddUser = () => {
     );
 };
 
-export default AddUser;
+export default EditUser;

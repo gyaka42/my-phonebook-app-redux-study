@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import Header from "../components/Header";
 import Button, { buttonClasses } from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
@@ -84,13 +85,13 @@ function handleClick(){
   navigate("/addUser")
 }
 
+
+
   return (
     <ThemeProvider theme={theme}>
-      <div style={{marginTop: "50px"}}>
-        <Button onClick={handleClick} variant="contained">Add Contact</Button>
-      </div>
+      <Header />
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: 50 }}>
-      <TableContainer sx={{ maxWidth: 1400 }} component={Paper}>
+      <TableContainer sx={{ maxWidth: 1000 }} component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
             <TableRow>
@@ -114,7 +115,7 @@ function handleClick(){
                 <StyledTableCell align="center">{user.email}</StyledTableCell>
                 <StyledTableCell align="center"><ButtonGroup variant="contained" aria-label="outlined primary button group">
                   <Button onClick={()=>handleDelete(user.id)} style={{marginRight: "3px"}} color="secondary">Delete</Button>
-                  <Button color="primary">Edit</Button>
+                  <Button onClick={()=> navigate(`/editUser/${user.id}`)} color="primary">Edit</Button>
                 </ButtonGroup></StyledTableCell>
               </StyledTableRow>
             ))}
@@ -122,6 +123,9 @@ function handleClick(){
         </Table>
       </TableContainer>
     </div>
+    <div style={{marginTop: "50px"}}>
+        <Button onClick={handleClick} variant="contained">Add Contact</Button>
+      </div>
     </ThemeProvider>
   )
 }
